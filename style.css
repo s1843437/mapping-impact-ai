@@ -1,0 +1,131 @@
+/* ==========================================================================
+   Variabili Globali (Identità Visiva UniGe & Scienze MFN)
+   ========================================================================== */
+:root {
+    --primary-color: #002677;      /* Blu istituzionale UniGe (id.unige.it) */
+    --mfn-color: #007C58;          /* Scienze MFN - PANTONE 2419 C (R:0 G:124 B:88) */
+    --accent-color: #0056b3;       /* Blu interattivo per link */
+    --text-color: #2b2b2b;         /* Testo principale */
+    --bg-color: #f4f6f9;           /* Sfondo chiaro e neutro */
+    --card-bg: #ffffff;            /* Sfondo delle sezioni */
+    --border-color: #d1d8e0;       /* Bordi delicati */
+}
+
+/* ==========================================================================
+   Stili Generali (Body)
+   ========================================================================== */
+body {
+    font-family: 'Fira Sans', sans-serif; /* Obbligatorio da linee guida per paragrafi e testo */
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+/* ==========================================================================
+   Intestazioni e Titoli
+   ========================================================================== */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto Slab', serif; /* Obbligatorio da linee guida per i titoli[cite: 8] */
+    color: var(--primary-color);
+    margin-top: 0;
+}
+
+h1 {
+    font-size: 2.4rem;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.5px;
+}
+
+h2 {
+    font-size: 1.6rem;
+    border-bottom: 2px solid var(--mfn-color); /* Sottolineatura a tema Scienze MFN */
+    padding-bottom: 0.4rem;
+    margin-top: 1.8rem;
+}
+
+h3 {
+    font-size: 1.25rem;
+    color: var(--mfn-color); /* Utilizzo del colore Scienze MFN per i sotto-titoli */
+    margin-top: 1.4rem;
+}
+
+/* ==========================================================================
+   Layout Strutturale (Header, Main, Section, Footer)
+   ========================================================================== */
+header {
+    background: linear-gradient(135deg, var(--primary-color), #001a4d);
+    color: #ffffff;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-bottom: 4px solid var(--mfn-color); /* Dettaglio visivo Scienze MFN nell'header */
+}
+
+header h1 {
+    color: #ffffff;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    font-style: italic;
+    opacity: 0.95;
+    margin: 0;
+    font-family: 'Fira Sans', sans-serif;
+}
+
+main {
+    max-width: 950px;
+    margin: 2.5rem auto;
+    padding: 0 1.5rem;
+}
+
+section {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 2.2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+article {
+    margin-bottom: 1.5rem;
+}
+
+/* ==========================================================================
+   Elenchi e Collegamenti (Links)
+   ========================================================================== */
+ul, ol {
+    padding-left: 1.5rem;
+}
+
+li {
+    margin-bottom: 0.6rem;
+}
+
+a {
+    color: var(--mfn-color); /* Link brandizzati con il colore Scienze MFN */
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.9rem;
+    color: #555;
+    border-top: 1px solid var(--border-color);
+    margin-top: 4rem;
+    background-color: #ffffff;
+}
