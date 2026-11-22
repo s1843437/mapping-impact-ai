@@ -148,3 +148,126 @@ footer {
     border: 2px solid var(--border-color);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
+
+
+/* ==========================================================================
+   Sezione 2 - Comparison Charts
+   ========================================================================== */
+.section-subtitle {
+    font-size: 1.05rem;
+    font-style: italic;
+    color: #4a5568;
+    margin-top: -0.2rem;
+    margin-bottom: 1.2rem;
+}
+
+.chart-card {
+    background-color: #fafbfc;
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--mfn-color);
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin-top: 1.6rem;
+}
+
+.chart-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.25rem;
+}
+
+.chart-desc {
+    font-size: 0.92rem;
+    color: #555;
+    margin-top: 0;
+    margin-bottom: 1.1rem;
+}
+
+.chart-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.chart-container svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    font-family: 'Fira Sans', sans-serif;
+}
+
+.chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.88rem;
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.chart-tooltip {
+    position: fixed;
+    background: rgba(0, 38, 119, 0.95);
+    color: #ffffff;
+    padding: 0.4rem 0.7rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    z-index: 1000;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.waffle-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2rem;
+}
+
+.waffle-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 22px);
+    grid-template-rows: repeat(10, 22px);
+    gap: 4px;
+}
+
+.waffle-cell {
+    width: 22px;
+    height: 22px;
+    border-radius: 3px;
+    background-color: #e2e8f0;
+    transition: transform 0.1s ease;
+}
+
+.waffle-cell.filled {
+    background-color: var(--mfn-color);
+}
+
+.waffle-cell:hover {
+    transform: scale(1.15);
+}
+
+.waffle-kpi {
+    max-width: 380px;
+}
+
+.waffle-number {
+    font-family: 'Roboto Slab', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--mfn-color);
+    line-height: 1.1;
+    margin-bottom: 0.4rem;
+}
