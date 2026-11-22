@@ -35,5 +35,36 @@
     "percentage": 68,
     "label": "Public entities with structured ICT & security governance",
     "note": "Each cell represents 1% in a 10x10 grid."
+  },
+  "dumbbell": [
+    { "metric": "Online Public Service Interaction", "italy": 54, "eu": 71 },
+    { "metric": "Digital Public ID Adoption", "italy": 68, "eu": 74 },
+    { "metric": "Open Data Availability", "italy": 79, "eu": 81 },
+    { "metric": "AI Readiness in Public Sector", "italy": 52, "eu": 63 }
+  ],
+  "circle_packing": {
+    "name": "PA AI & Digital Initiatives",
+    "children": [
+      {
+        "name": "Citizen Services",
+        "children": [
+          { "name": "Virtual Assistants", "value": 28 },
+          { "name": "Automated Workflows", "value": 19 }
+        ]
+      },
+      {
+        "name": "Security & Governance",
+        "children": [
+          { "name": "Risk & Compliance Audits", "value": 22 },
+          { "name": "SOC & Threat Monitoring", "value": 17 }
+        ]
+      },
+      {
+        "name": "Internal Operations",
+        "children": [
+          { "name": "Document & Data Analytics", "value": 14 }
+        ]
+      }
+    ]
   }
 }
