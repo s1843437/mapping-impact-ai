@@ -1,0 +1,39 @@
+{
+  "barchart": [
+    { "label": "General Public Services", "value": 34 },
+    { "label": "Health & Social Care", "value": 24 },
+    { "label": "Environment & Territory", "value": 16 },
+    { "label": "Justice & Public Order", "value": 14 },
+    { "label": "Education & Culture", "value": 12 }
+  ],
+  "grouped_barchart": {
+    "categories": ["ICT Skills", "Cybersecurity & Privacy", "Regulatory Compliance", "Budget & Infrastructure"],
+    "series": [
+      { "name": "Central & Regional PA", "values": [58, 64, 61, 45] },
+      { "name": "Local PA (Municipalities)", "values": [76, 71, 68, 79] }
+    ]
+  },
+  "heatmap": {
+    "countries": ["Italy", "Germany", "France", "Spain", "Netherlands", "EU Average"],
+    "metrics": ["e-Gov Portal Usage", "Open Data Maturity", "Digital Public ID", "AI Readiness"],
+    "matrix": [
+      [62, 78, 74, 55],
+      [68, 81, 65, 67],
+      [79, 84, 77, 71],
+      [76, 82, 80, 64],
+      [89, 88, 91, 78],
+      [74, 80, 75, 63]
+    ]
+  },
+  "stacked_100": [
+    { "domain": "Justice & Law Enforcement", "high": 65, "limited": 25, "minimal": 10 },
+    { "domain": "Public Employment & Social", "high": 45, "limited": 35, "minimal": 20 },
+    { "domain": "Environmental Monitoring", "high": 20, "limited": 30, "minimal": 50 },
+    { "domain": "Citizen Information & FAQ", "high": 5, "limited": 65, "minimal": 30 }
+  ],
+  "waffle": {
+    "percentage": 68,
+    "label": "Public entities with structured ICT & security governance",
+    "note": "Each cell represents 1% in a 10x10 grid."
+  }
+}
