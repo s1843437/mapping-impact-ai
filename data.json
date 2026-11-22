@@ -66,5 +66,34 @@
         ]
       }
     ]
-  }
+  },
+  "stacked_small_multiples": [
+    {
+      "panelTitle": "Central PA",
+      "bars": [
+        { "label": "2024", "segA": 35, "segB": 40, "segC": 25 },
+        { "label": "2025", "segA": 42, "segB": 36, "segC": 22 }
+      ]
+    },
+    {
+      "panelTitle": "Regional PA",
+      "bars": [
+        { "label": "2024", "segA": 28, "segB": 42, "segC": 30 },
+        { "label": "2025", "segA": 34, "segB": 38, "segC": 28 }
+      ]
+    },
+    {
+      "panelTitle": "Local PA",
+      "bars": [
+        { "label": "2024", "segA": 18, "segB": 45, "segC": 37 },
+        { "label": "2025", "segA": 24, "segB": 41, "segC": 35 }
+      ]
+    }
+  ],
+  "pie_chart": [
+    { "label": "Internal Operations & Automation", "value": 38 },
+    { "label": "Citizen Services & Chatbots", "value": 29 },
+    { "label": "Cybersecurity & Compliance", "value": 19 },
+    { "label": "Policy & Decision Support", "value": 14 }
+  ]
 }
