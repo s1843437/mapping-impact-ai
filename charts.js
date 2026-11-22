@@ -38,6 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
             renderHeatmap(data.heatmap);
             renderStacked100(data.stacked_100);
             renderWaffle(data.waffle);
+            renderDumbbell(data.dumbbell);
+            renderCirclePacking(data.circle_packing);
         })
         .catch((err) => {
             console.error(err);
@@ -49,18 +51,21 @@ document.addEventListener("DOMContentLoaded", () => {
     // 1. Bar Chart
     function renderBarChart(items) {
         const container = document.getElementById("chart-barchart");
+        if (!container || !Array.isArray(items)) return;
+
         const width = 760;
         const rowH = 42;
         const margin = { top: 10, right: 50, bottom: 25, left: 210 };
         const height = margin.top + margin.bottom + items.length * rowH;
-        const maxVal = Math.max(...items.map((d) => d.value), 10);
+        const maxVal = Math.max(...items.map((d) => Number(d.value) || 0), 10);
         const plotW = width - margin.left - margin.right;
 
         const svg = svgEl("svg", { viewBox: `0 0 ${width} ${height}` });
 
         items.forEach((d, i) => {
+            const val = Number(d.value) || 0;
             const y = margin.top + i * rowH;
-            const barW = (d.value / maxVal) * plotW;
+            const barW = (val / maxVal) * plotW;
 
             const lbl = svgEl("text", {
                 x: margin.left - 10,
@@ -80,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 rx: 4,
                 fill: "#007C58"
             });
-            rect.addEventListener("mouseenter", (e) => showTip(e, `${d.label}: ${d.value}%`));
+            rect.addEventListener("mouseenter", (e) => showTip(e, `${d.label}: ${val}%`));
             rect.addEventListener("mousemove", moveTip);
             rect.addEventListener("mouseleave", hideTip);
             svg.appendChild(rect);
@@ -92,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 "font-weight": "600",
                 fill: "#002677"
             });
-            valTxt.textContent = `${d.value}%`;
+            valTxt.textContent = `${val}%`;
             svg.appendChild(valTxt);
         });
 
@@ -102,6 +107,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // 2. Grouped Bar Chart
     function renderGroupedBarChart(cfg) {
         const container = document.getElementById("chart-grouped");
+        if (!container || !cfg || !Array.isArray(cfg.categories) || !Array.isArray(cfg.series)) return;
+
         const colors = ["#002677", "#007C58"];
 
         const legend = document.createElement("div");
@@ -141,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const groupX = margin.left + cIdx * groupW + (groupW - barW * cfg.series.length) / 2;
 
             cfg.series.forEach((s, sIdx) => {
-                const val = s.values[cIdx];
+                const val = Number(s.values[cIdx]) || 0;
                 const h = (val / maxVal) * plotH;
                 const x = groupX + sIdx * barW;
                 const y = margin.top + plotH - h;
@@ -173,6 +180,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // 3. Heatmap
     function renderHeatmap(cfg) {
         const container = document.getElementById("chart-heatmap");
+        if (!container || !cfg || !Array.isArray(cfg.countries) || !Array.isArray(cfg.metrics) || !Array.isArray(cfg.matrix)) return;
+
         const cols = cfg.metrics.length;
         const rows = cfg.countries.length;
         const margin = { top: 55, right: 20, bottom: 20, left: 130 };
@@ -209,7 +218,8 @@ document.addEventListener("DOMContentLoaded", () => {
             rowLbl.textContent = country;
             svg.appendChild(rowLbl);
 
-            cfg.matrix[r].forEach((val, c) => {
+            cfg.matrix[r].forEach((rawVal, c) => {
+                const val = Number(rawVal) || 0;
                 const x = margin.left + c * cellW;
                 const intensity = Math.max(0.12, Math.min(1, val / 100));
                 const rect = svgEl("rect", {
@@ -242,6 +252,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // 4. 100% Stacked Bar Chart
     function renderStacked100(rowsData) {
         const container = document.getElementById("chart-stacked100");
+        if (!container || !Array.isArray(rowsData)) return;
+
         const categories = [
             { key: "high", label: "High Risk", color: "#002677" },
             { key: "limited", label: "Limited Risk", color: "#007C58" },
@@ -265,7 +277,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         rowsData.forEach((row, idx) => {
             const y = margin.top + idx * rowH;
-            const total = categories.reduce((acc, c) => acc + (row[c.key] || 0), 0) || 100;
+            const total = categories.reduce((acc, c) => acc + (Number(row[c.key]) || 0), 0) || 100;
 
             const lbl = svgEl("text", {
                 x: margin.left - 10, y: y + 23,
@@ -276,7 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             let curX = margin.left;
             categories.forEach((c) => {
-                const pct = Math.round(((row[c.key] || 0) / total) * 100);
+                const pct = Math.round(((Number(row[c.key]) || 0) / total) * 100);
                 const w = (pct / 100) * barTotalW;
 
                 const rect = svgEl("rect", {
@@ -308,6 +320,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // 5. Waffle Chart
     function renderWaffle(cfg) {
         const container = document.getElementById("chart-waffle");
+        if (!container || !cfg) return;
+
         const pct = Math.max(0, Math.min(100, Number(cfg.percentage) || 0));
 
         const wrapper = document.createElement("div");
@@ -329,12 +343,165 @@ document.addEventListener("DOMContentLoaded", () => {
         kpi.className = "waffle-kpi";
         kpi.innerHTML = `
             <div class="waffle-number">${pct}%</div>
-            <div><strong>${cfg.label}</strong></div>
-            <p class="chart-desc" style="margin-top:0.4rem;margin-bottom:0;">${cfg.note}</p>
+            <div><strong>${cfg.label || ""}</strong></div>
+            <p class="chart-desc" style="margin-top:0.4rem;margin-bottom:0;">${cfg.note || ""}</p>
         `;
 
         wrapper.appendChild(grid);
         wrapper.appendChild(kpi);
         container.appendChild(wrapper);
+    }
+
+    // Extra 1: Dumbbell Plot (Italy vs EU Average)
+    function renderDumbbell(items) {
+        const container = document.getElementById("chart-dumbbell");
+        if (!container || !Array.isArray(items)) return;
+
+        const legend = document.createElement("div");
+        legend.className = "chart-legend";
+        legend.innerHTML = `
+            <span class="legend-item"><span class="legend-swatch" style="background:#002677"></span>Italy</span>
+            <span class="legend-item"><span class="legend-swatch" style="background:#007C58"></span>EU Average</span>
+        `;
+        container.appendChild(legend);
+
+        const width = 760;
+        const rowH = 52;
+        const margin = { top: 16, right: 35, bottom: 28, left: 225 };
+        const height = margin.top + margin.bottom + items.length * rowH;
+        const plotW = width - margin.left - margin.right;
+
+        const svg = svgEl("svg", { viewBox: `0 0 ${width} ${height}` });
+
+        [0, 25, 50, 75, 100].forEach((tick) => {
+            const x = margin.left + (tick / 100) * plotW;
+            svg.appendChild(svgEl("line", {
+                x1: x, y1: margin.top, x2: x, y2: height - margin.bottom,
+                stroke: "#e2e8f0", "stroke-width": "1"
+            }));
+            const t = svgEl("text", {
+                x, y: height - 8,
+                "text-anchor": "middle", "font-size": "11", fill: "#555"
+            });
+            t.textContent = `${tick}`;
+            svg.appendChild(t);
+        });
+
+        items.forEach((d, i) => {
+            const itVal = Number(d.italy) || 0;
+            const euVal = Number(d.eu) || 0;
+            const cy = margin.top + i * rowH + rowH / 2;
+            const xIt = margin.left + (itVal / 100) * plotW;
+            const xEu = margin.left + (euVal / 100) * plotW;
+
+            const lbl = svgEl("text", {
+                x: margin.left - 12, y: cy + 4,
+                "text-anchor": "end", "font-size": "12.5", fill: "#2b2b2b"
+            });
+            lbl.textContent = d.metric;
+            svg.appendChild(lbl);
+
+            svg.appendChild(svgEl("line", {
+                x1: xIt, y1: cy, x2: xEu, y2: cy,
+                stroke: "#94a3b8", "stroke-width": "3"
+            }));
+
+            const cIt = svgEl("circle", {
+                cx: xIt, cy, r: 7, fill: "#002677", stroke: "#ffffff", "stroke-width": "1.5"
+            });
+            cIt.addEventListener("mouseenter", (e) => showTip(e, `${d.metric} — Italy: ${itVal}`));
+            cIt.addEventListener("mousemove", moveTip);
+            cIt.addEventListener("mouseleave", hideTip);
+            svg.appendChild(cIt);
+
+            const cEu = svgEl("circle", {
+                cx: xEu, cy, r: 7, fill: "#007C58", stroke: "#ffffff", "stroke-width": "1.5"
+            });
+            cEu.addEventListener("mouseenter", (e) => showTip(e, `${d.metric} — EU Average: ${euVal}`));
+            cEu.addEventListener("mousemove", moveTip);
+            cEu.addEventListener("mouseleave", hideTip);
+            svg.appendChild(cEu);
+        });
+
+        container.appendChild(svg);
+    }
+
+    // Extra 2: Circle Packing
+    function renderCirclePacking(root) {
+        const container = document.getElementById("chart-circlepacking");
+        if (!container || !root || !Array.isArray(root.children)) return;
+
+        const width = 760;
+        const height = 360;
+        const svg = svgEl("svg", { viewBox: `0 0 ${width} ${height}` });
+
+        const groups = root.children;
+        const groupTotals = groups.map((g) =>
+            (g.children || []).reduce((sum, item) => sum + (Number(item.value) || 0), 0)
+        );
+        const totalAll = groupTotals.reduce((a, b) => a + b, 0) || 1;
+
+        const palette = ["#007C58", "#002677", "#2b6cb0"];
+        const slotW = width / groups.length;
+
+        groups.forEach((grp, gIdx) => {
+            const baseColor = palette[gIdx % palette.length];
+            const ratio = groupTotals[gIdx] / totalAll;
+            const maxR = Math.min(slotW * 0.42, height * 0.36);
+            const outerR = Math.max(52, maxR * Math.sqrt(ratio * groups.length * 0.85));
+            const cx = slotW * gIdx + slotW / 2;
+            const cy = height / 2 + 8;
+
+            const outerCircle = svgEl("circle", {
+                cx, cy, r: outerR,
+                fill: baseColor, "fill-opacity": "0.14",
+                stroke: baseColor, "stroke-width": "2"
+            });
+            outerCircle.addEventListener("mouseenter", (e) => showTip(e, `${grp.name}: ${groupTotals[gIdx]} total`));
+            outerCircle.addEventListener("mousemove", moveTip);
+            outerCircle.addEventListener("mouseleave", hideTip);
+            svg.appendChild(outerCircle);
+
+            const grpTitle = svgEl("text", {
+                x: cx, y: cy - outerR - 10,
+                "text-anchor": "middle", "font-size": "12.5",
+                "font-weight": "700", fill: baseColor
+            });
+            grpTitle.textContent = grp.name;
+            svg.appendChild(grpTitle);
+
+            const kids = grp.children || [];
+            const kidMax = Math.max(...kids.map((k) => Number(k.value) || 0), 1);
+            const spread = outerR * 0.45;
+
+            kids.forEach((kid, kIdx) => {
+                const val = Number(kid.value) || 0;
+                const angle = (kIdx / Math.max(kids.length, 1)) * Math.PI * 2 - Math.PI / 2;
+                const offset = kids.length > 1 ? spread : 0;
+                const kx = cx + Math.cos(angle) * offset;
+                const ky = cy + Math.sin(angle) * offset;
+                const kr = Math.max(16, (outerR * 0.42) * Math.sqrt(val / kidMax));
+
+                const innerCircle = svgEl("circle", {
+                    cx: kx, cy: ky, r: kr,
+                    fill: baseColor, "fill-opacity": "0.85",
+                    stroke: "#ffffff", "stroke-width": "1.5"
+                });
+                innerCircle.addEventListener("mouseenter", (e) => showTip(e, `${grp.name} — ${kid.name}: ${val}`));
+                innerCircle.addEventListener("mousemove", moveTip);
+                innerCircle.addEventListener("mouseleave", hideTip);
+                svg.appendChild(innerCircle);
+
+                const kTxt = svgEl("text", {
+                    x: kx, y: ky + 4,
+                    "text-anchor": "middle", "font-size": "11",
+                    "font-weight": "600", fill: "#ffffff"
+                });
+                kTxt.textContent = val;
+                svg.appendChild(kTxt);
+            });
+        });
+
+        container.appendChild(svg);
     }
 });
