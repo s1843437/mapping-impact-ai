@@ -271,3 +271,14 @@ footer {
     line-height: 1.1;
     margin-bottom: 0.4rem;
 }
+
+/* Nota metodologica sui dati: riquadro per segnalare valori segnaposto in attesa dei dataset reali */
+.data-disclaimer {
+    background-color: #eef4f8;
+    border-left: 4px solid var(--primary-color); /* Blu istituzionale UniGe */
+    padding: 0.9rem 1.2rem;
+    margin: 1.2rem 0 1.6rem 0;
+    border-radius: 4px;
+    font-size: 0.92rem;
+    color: var(--text-color);
+}
