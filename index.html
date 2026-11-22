@@ -44,8 +44,8 @@
                     in the MFN domain. Raw data will be cleaned, structured, and transformed through standard database
                     queries and dedicated scripts. Finally, the processed data will be rendered dynamically on the
                     client side, ensuring a responsive, interactive, and accessible user experience.
-                </p><br>
-                <p><a href="website_setup_bongio.pdf" alt="link al file PDF">First assignement</a></p>
+                </p>
+                <p><a href="website_setup_bongio.pdf" title="link al file PDF">First assignement</a></p>
                 
             </article>
 
@@ -125,7 +125,7 @@
 
                 <h4>Initial visualization ideas and any concerns about data availability.</h4>
                 <h5>Initial Visualization Ideas</h5>
-                <p>
+                
                 <ul>
                     <li>
                         Category Comparisons: Bar charts comparing AI application domains across public services and
@@ -144,24 +144,60 @@
                         classifications and organizational impacts.
                     </li>
                 </ul>
-                </p>
+                
                 <h5>Data Availability and Concerns</h5>
                 <p>Unlike the private sector—where standardized enterprise surveys are updated annually—granular,
                     uniform statistics on actual AI deployment within local and regional Public Administrations are
                     often more fragmented or rely on periodic institutional censuses and pilot-project inventories. To
                     address this limitation, our analysis will combine official quantitative indicators (from Istat and
                     Eurostat) with structured qualitative mappings of European public-sector use cases curated by the
-                    JRC.</p><br>
-                     <p><a href="Proposal_bongio.pdf" alt="link al file PDF">Second assignement</a></p>
+                    JRC.</p>
+                     <p><a href="Proposal_bongio.pdf" title="link al file PDF">Second assignement</a></p>
             </article>
         </section>
 
-        <section id="immagine">
 
-            <div class="image-container">
-                <img src="comics.jpg" alt="Mapping the Impact of AI - Comics" class="comics-illustration">
-            </div>
+<!-- Sezione 2: Comparison -->
+        <section id="comparison">
+            <h2>Section 2 - Comparison: AI Adoption &amp; Readiness in Public Administration</h2>
+            <p class="section-subtitle">Comparing service domains, administrative tiers, European countries, and regulatory risk profiles.</p>
+            <p>
+                Comparing adoption levels, structural barriers, and digital capabilities across European and Italian public administrations highlights where AI initiatives are concentrated and which organizational or security gaps require priority intervention.
+            </p>
+
+            <article class="chart-card">
+                <h3>1. Bar Chart — AI Use Cases by Public Service Domain</h3>
+                <p class="chart-desc">Share (%) of mapped public-sector AI initiatives across administrative domains.</p>
+                <div id="chart-barchart" class="chart-container"></div>
+            </article>
+
+            <article class="chart-card">
+                <h3>2. Grouped Bar Chart — Adoption Barriers by Administrative Tier</h3>
+                <p class="chart-desc">Reported impact (%) comparing Central &amp; Regional PA against Local PA.</p>
+                <div id="chart-grouped" class="chart-container"></div>
+            </article>
+
+            <article class="chart-card">
+                <h3>3. Heatmap — Digital Public Services &amp; Readiness Matrix</h3>
+                <p class="chart-desc">Comparative scores (0–100) across selected European countries and key indicators.</p>
+                <div id="chart-heatmap" class="chart-container"></div>
+            </article>
+
+            <article class="chart-card">
+                <h3>4. 100% Stacked Bar Chart — AI Act Risk Profiles by Domain</h3>
+                <p class="chart-desc">Relative distribution (%) of High-Risk, Limited-Risk, and Minimal-Risk use cases.</p>
+                <div id="chart-stacked100" class="chart-container"></div>
+            </article>
+
+            <article class="chart-card">
+                <h3>5. Waffle Chart — Structured ICT &amp; Security Governance</h3>
+                <p class="chart-desc">Proportion of public institutions reporting formalized cybersecurity and ICT governance.</p>
+                <div id="chart-waffle" class="chart-container"></div>
+            </article>
         </section>
+
+
+
 
         <!-- Pagine/sezioni successive  -->
         <!-- 
@@ -176,6 +212,10 @@
         <p>&copy; 2026 — Università di Genova — Mapping the Impact of AI</p>
     </footer>
 
+
+
+
+    <script src="charts.js"></script>
 </body>
 
 </html>
