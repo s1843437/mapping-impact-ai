@@ -40,6 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
             renderWaffle(data.waffle);
             renderDumbbell(data.dumbbell);
             renderCirclePacking(data.circle_packing);
+            renderStackedSmallMultiples(data.stacked_small_multiples);
+            renderPieChart(data.pie_chart);
         })
         .catch((err) => {
             console.error(err);
@@ -503,5 +505,189 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         container.appendChild(svg);
+    }
+
+    // Extra 3: Stacked Bar Chart (Small Multiple)
+    function renderStackedSmallMultiples(panels) {
+        const container = document.getElementById("chart-small-multiples");
+        if (!container || !Array.isArray(panels) || panels.length === 0) return;
+
+        const segments = [
+            { key: "segA", label: "Core AI & Automation", color: "#002677" },
+            { key: "segB", label: "Digital & Data Enablement", color: "#007C58" },
+            { key: "segC", label: "Governance & Training", color: "#88b8a8" }
+        ];
+
+        const legend = document.createElement("div");
+        legend.className = "chart-legend";
+        segments.forEach((s) => {
+            legend.innerHTML += `<span class="legend-item"><span class="legend-swatch" style="background:${s.color}"></span>${s.label}</span>`;
+        });
+        container.appendChild(legend);
+
+        const panelW = 240;
+        const gap = 20;
+        const width = panels.length * panelW + (panels.length - 1) * gap;
+        const height = 250;
+        const margin = { top: 34, right: 16, bottom: 36, left: 38 };
+        const plotH = height - margin.top - margin.bottom;
+
+        const svg = svgEl("svg", { viewBox: `0 0 ${width} ${height}` });
+
+        const allTotals = panels.flatMap((p) =>
+            (p.bars || []).map((b) => segments.reduce((sum, s) => sum + (Number(b[s.key]) || 0), 0))
+        );
+        const maxTotal = Math.max(...allTotals, 100);
+
+        panels.forEach((panel, pIdx) => {
+            const ox = pIdx * (panelW + gap);
+
+            const title = svgEl("text", {
+                x: ox + panelW / 2,
+                y: 18,
+                "text-anchor": "middle",
+                "font-size": "13",
+                "font-weight": "700",
+                fill: "#002677"
+            });
+            title.textContent = panel.panelTitle;
+            svg.appendChild(title);
+
+            [0, 50, 100].forEach((tick) => {
+                if (tick > maxTotal) return;
+                const y = margin.top + plotH - (tick / maxTotal) * plotH;
+                svg.appendChild(svgEl("line", {
+                    x1: ox + margin.left, y1: y,
+                    x2: ox + panelW - margin.right, y2: y,
+                    stroke: "#e2e8f0", "stroke-width": "1"
+                }));
+                if (pIdx === 0) {
+                    const t = svgEl("text", {
+                        x: ox + margin.left - 6, y: y + 4,
+                        "text-anchor": "end", "font-size": "10.5", fill: "#555"
+                    });
+                    t.textContent = tick;
+                    svg.appendChild(t);
+                }
+            });
+
+            const bars = panel.bars || [];
+            const innerW = panelW - margin.left - margin.right;
+            const slotW = innerW / Math.max(bars.length, 1);
+            const barW = Math.min(44, slotW * 0.55);
+
+            bars.forEach((b, bIdx) => {
+                const bx = ox + margin.left + bIdx * slotW + (slotW - barW) / 2;
+                let curBottom = margin.top + plotH;
+
+                segments.forEach((s) => {
+                    const val = Number(b[s.key]) || 0;
+                    const h = (val / maxTotal) * plotH;
+                    curBottom -= h;
+
+                    const rect = svgEl("rect", {
+                        x: bx, y: curBottom,
+                        width: barW, height: Math.max(h, 0),
+                        fill: s.color, stroke: "#ffffff", "stroke-width": "1"
+                    });
+                    rect.addEventListener("mouseenter", (e) => showTip(e, `${panel.panelTitle} (${b.label}) — ${s.label}: ${val}`));
+                    rect.addEventListener("mousemove", moveTip);
+                    rect.addEventListener("mouseleave", hideTip);
+                    svg.appendChild(rect);
+                });
+
+                const bLbl = svgEl("text", {
+                    x: bx + barW / 2,
+                    y: height - 12,
+                    "text-anchor": "middle",
+                    "font-size": "11.5",
+                    fill: "#2b2b2b"
+                });
+                bLbl.textContent = b.label;
+                svg.appendChild(bLbl);
+            });
+        });
+
+        container.appendChild(svg);
+    }
+
+    // Extra 4: Pie Chart
+    function renderPieChart(items) {
+        const container = document.getElementById("chart-pie");
+        if (!container || !Array.isArray(items) || items.length === 0) return;
+
+        const colors = ["#007C58", "#002677", "#2b6cb0", "#68a691", "#4a5568"];
+        const total = items.reduce((sum, d) => sum + (Number(d.value) || 0), 0) || 1;
+
+        const wrapper = document.createElement("div");
+        wrapper.style.display = "flex";
+        wrapper.style.flexWrap = "wrap";
+        wrapper.style.alignItems = "center";
+        wrapper.style.gap = "1.8rem";
+
+        const size = 280;
+        const r = 115;
+        const cx = size / 2;
+        const cy = size / 2;
+        const svg = svgEl("svg", {
+            viewBox: `0 0 ${size} ${size}`,
+            style: "max-width: 280px; flex: 0 0 auto;"
+        });
+
+        let startAngle = -Math.PI / 2;
+
+        items.forEach((d, idx) => {
+            const val = Number(d.value) || 0;
+            const sliceAngle = (val / total) * Math.PI * 2;
+            const endAngle = startAngle + sliceAngle;
+            const largeArc = sliceAngle > Math.PI ? 1 : 0;
+
+            const x1 = cx + r * Math.cos(startAngle);
+            const y1 = cy + r * Math.sin(startAngle);
+            const x2 = cx + r * Math.cos(endAngle);
+            const y2 = cy + r * Math.sin(endAngle);
+
+            const pathData = [
+                `M ${cx} ${cy}`,
+                `L ${x1} ${y1}`,
+                `A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2}`,
+                "Z"
+            ].join(" ");
+
+            const pct = Math.round((val / total) * 100);
+            const slice = svgEl("path", {
+                d: pathData,
+                fill: colors[idx % colors.length],
+                stroke: "#ffffff",
+                "stroke-width": "2"
+            });
+            slice.addEventListener("mouseenter", (e) => showTip(e, `${d.label}: ${val} (${pct}%)`));
+            slice.addEventListener("mousemove", moveTip);
+            slice.addEventListener("mouseleave", hideTip);
+            svg.appendChild(slice);
+
+            startAngle = endAngle;
+        });
+
+        const legendList = document.createElement("div");
+        legendList.style.display = "flex";
+        legendList.style.flexDirection = "column";
+        legendList.style.gap = "0.55rem";
+        legendList.style.fontSize = "0.9rem";
+
+        items.forEach((d, idx) => {
+            const val = Number(d.value) || 0;
+            const pct = Math.round((val / total) * 100);
+            legendList.innerHTML += `
+                <span class="legend-item">
+                    <span class="legend-swatch" style="background:${colors[idx % colors.length]}"></span>
+                    <span><strong>${d.label}</strong>: ${val} (${pct}%)</span>
+                </span>
+            `;
+        });
+
+        wrapper.appendChild(svg);
+        wrapper.appendChild(legendList);
+        container.appendChild(wrapper);
     }
 });
